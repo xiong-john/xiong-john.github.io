@@ -71,6 +71,393 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-架构师" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/27/%E6%9E%B6%E6%9E%84%E5%B8%88/" class="article-date">
+  <time class="dt-published" datetime="2024-06-27T03:50:31.000Z" itemprop="datePublished">2024-06-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/06/27/%E6%9E%B6%E6%9E%84%E5%B8%88/">架构师</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.xiongmeiqiang.cn/2024/06/27/%E6%9E%B6%E6%9E%84%E5%B8%88/" data-id="clcffyws70004zkfy4lf4gwck" data-title="架构师" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-map" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/26/map/" class="article-date">
+  <time class="dt-published" datetime="2024-06-26T07:01:33.758Z" itemprop="datePublished">2024-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        // 声明全局变量
+let scene, camera, renderer, particles, particleSystem;
+
+let keyboard = {}; // 用于存储键盘按键状态
+// 初始化函数
+function init() {
+  // 创建场景
+  scene = new THREE.Scene();
+
+  // 创建相机
+  camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    1,
+    1000
+  );
+  camera.position.set(0, 0, 100);
+
+  // 创建渲染器
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  const height = window.innerHeight
+  const width = window.innerWidth;
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  let _l = new THREE.TextureLoader().load("textures/holand/_l.jpg");
+  let _b = new THREE.TextureLoader().load("textures/holand/_b.jpg");
+  let _d = new THREE.TextureLoader().load("textures/holand/_d.jpg");
+  let _f = new THREE.TextureLoader().load("textures/holand/_f.jpg");
+  let _r = new THREE.TextureLoader().load("textures/holand/_r.jpg");
+  let _u = new THREE.TextureLoader().load("textures/holand/_u.jpg");
+  let skyBoxGeometry = new THREE.BoxGeometry(height, width, 1000);
+  let skyBoxMaterial = [
+    new THREE.MeshBasicMaterial({ map: _l, side: THREE.BackSide }), // 反面贴图
+    new THREE.MeshBasicMaterial({ map: _r, side: THREE.BackSide }), // 正面贴图
+    new THREE.MeshBasicMaterial({ map: _f, side: THREE.BackSide }), // 上面贴图
+    new THREE.MeshBasicMaterial({ map: _u, side: THREE.BackSide }), // 下面贴图
+    new THREE.MeshBasicMaterial({ map: _f, side: THREE.BackSide }), // 左面贴图
+    new THREE.MeshBasicMaterial({ map: _b, side: THREE.BackSide }), // 右面贴图
+  ];
+  let skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+  scene.add(skyBox);
+
+  // 添加云
+  let cloudTexture = new THREE.TextureLoader().load("textures/cloud.png");
+  let cloudMaterial = new THREE.MeshBasicMaterial({
+    map: cloudTexture,
+    transparent: true,
+  });
+  let cloudGeometry1 = new THREE.PlaneGeometry(50, 20);
+  let cloudGeometry2 = new THREE.PlaneGeometry(70, 30);
+  let cloud1 = new THREE.Mesh(cloudGeometry1, cloudMaterial);
+  let cloud2 = new THREE.Mesh(cloudGeometry2, cloudMaterial);
+  cloud1.position.set(15, 0, 3);
+  cloud2.position.set(0, 10, 2);
+  cloud1.name = "cloud1";
+  cloud2.name = "cloud2";
+  scene.add(cloud1);
+  scene.add(cloud2);
+
+  // 添加太阳
+  let SunTexture = new THREE.TextureLoader().load("textures/sun.png");
+  let sunGeometry = new THREE.PlaneGeometry(30, 30);
+  let sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+  let SunMaterial = new THREE.MeshBasicMaterial({
+    map: SunTexture,
+    transparent: true,
+  });
+  let sun = new THREE.Mesh(sunGeometry, SunMaterial);
+
+  // scene.getObjectByName('cloud1').rotation.z += 0.002;
+  // scene.getObjectByName('cloud2').rotation.z += 0.002;
+
+  sun.position.set(0, 20, 0);
+  sun.name = "sun";
+  scene.add(sun);
+
+  //  // 添加蓝天背景（天空盒）
+  //  let skyTexture = new THREE.TextureLoader().load('textures/sky.jpg');
+  //  let skyBoxGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
+  //  let skyBoxMaterial = [
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 反面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 正面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 上面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 下面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 左面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide })  // 右面贴图
+  //  ];
+  //  let skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+  //  scene.add(skyBox);
+
+  // 创建粒子材质··
+  let particleCount = 10000;
+  particles = new THREE.Geometry();
+  let particleTexture = new THREE.TextureLoader().load("textures/raindrop.png");
+  let particleMaterial = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 1,
+    map: particleTexture,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+  });
+
+  // 创建粒子系统
+  for (let i = 0; i < particleCount; i++) {
+    let x = Math.random() * 1000 - 100;
+    let y = Math.random() * 1000 - 100;
+    let z = Math.random() * 1000 - 100;
+    let particle = new THREE.Vector3(x, y, z);
+    particle.velocityY = -Math.random() * 2 - 1; // 下落速度随机
+    particles.vertices.push(particle);
+  }
+
+  // 创建粒子系统对象
+  particleSystem = new THREE.Points(particles, particleMaterial);
+  scene.add(particleSystem);
+
+  // 添加光源
+  let ambientLight = new THREE.AmbientLight(0x404040); // 环境光
+  scene.add(ambientLight);
+
+  // 监听窗口大小变化
+  window.addEventListener("resize", onWindowResize, false);
+
+  // 监听窗口大小变化
+  window.addEventListener("resize", onWindowResize, false);
+
+  // 监听键盘事件
+  document.addEventListener("keydown", onKeyDown, false);
+  document.addEventListener("keyup", onKeyUp, false);
+
+  // 开始渲染
+  animate();
+}
+
+// 键盘按下事件处理函数
+function onKeyDown(event) {
+  keyboard[event.code] = true;
+}
+
+// 键盘释放事件处理函数
+function onKeyUp(event) {
+  keyboard[event.code] = false;
+}
+
+// 窗口大小变化处理函数
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// 动画循环
+function animate() {
+  requestAnimationFrame(animate);
+
+  // 更新粒子位置
+  particles.vertices.forEach((particle) => {
+    if (particle.y < -100) {
+      particle.y = 100;
+      particle.velocityY = -Math.random() * 2 - 1;
+    }
+    particle.y += particle.velocityY;
+  });
+
+  // 更新粒子系统
+  particleSystem.geometry.verticesNeedUpdate = true;
+
+  // 旋转太阳和云以增加动感
+  scene.getObjectByName("sun").rotation.z += 0.005;
+  scene.getObjectByName("cloud1").position.x += 0.01;
+  scene.getObjectByName("cloud2").position.x += 0.02;
+
+  // 根据按键状态移动相机
+  if (keyboard["KeyW"]) {
+    camera.position.z -= 0.1;
+  }
+  if (keyboard["KeyS"]) {
+    camera.position.z += 0.1;
+  }
+  if (keyboard["KeyA"]) {
+    camera.position.x -= 0.1;
+  }
+  if (keyboard["KeyD"]) {
+    camera.position.x += 0.1;
+  }
+  if (keyboard["KeyQ"]) {
+    camera.rotation.y += 0.1;
+  }
+
+  // 渲染场景
+  renderer.render(scene, camera);
+}
+
+// 初始化
+init();
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.xiongmeiqiang.cn/2024/06/26/map/" data-id="clcffyws30001zkfygqoe5b5v" data-title="" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-vuejs-package" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/24/vuejs-package/" class="article-date">
+  <time class="dt-published" datetime="2024-06-24T07:12:34.000Z" itemprop="datePublished">2024-06-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/06/24/vuejs-package/">vuejs_package</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;private&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="comment">// npm will refuse to publish it</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;3.4.30&quot;</span><span class="punctuation">,</span> <span class="comment">// https://semver.org/lang/zh-CN/ 语义化版本</span></span><br><span class="line">  <span class="attr">&quot;packageManager&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pnpm@9.4.0&quot;</span><span class="punctuation">,</span> <span class="comment">// 实验属性，当包被使用时推荐使用的包管理工具，被Node.js中的Corepack使用。</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;module&quot;</span><span class="punctuation">,</span> <span class="comment">// type字段用于定义package.json文件和该文件所在目录根目录中 .js文件和无扩展名文件的模块化处理规范，默认值为&#x27;commonjs&#x27;。值为module则采用ESModule规范</span></span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;dev&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/dev.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build-dts&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tsc -p tsconfig.build-browser.json &amp;&amp; tsc -p tsconfig.build-node.json &amp;&amp; rollup -c rollup.dts.config.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;clean&quot;</span><span class="punctuation">:</span> <span class="string">&quot;rimraf packages/*/dist temp .eslintcache&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="string">&quot;run-s \&quot;size-*\&quot; &amp;&amp; tsx scripts/usage-size.ts&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size-global&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js vue runtime-dom -f global -p --size&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size-esm-runtime&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js vue -f esm-bundler-runtime&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;size-esm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js runtime-dom runtime-core reactivity shared -f esm-bundler&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;check&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tsc --incremental --noEmit&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;lint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eslint --cache .&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prettier --write --cache .&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;format-check&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prettier --check --cache .&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vitest&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test-unit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vitest -c vitest.unit.config.ts&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test-e2e&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js vue -f global -d &amp;&amp; vitest -c vitest.e2e.config.ts&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test-dts&quot;</span><span class="punctuation">:</span> <span class="string">&quot;run-s build-dts test-dts-only&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test-dts-only&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tsc -p packages/dts-built-test/tsconfig.json &amp;&amp; tsc -p ./packages/dts-test/tsconfig.test.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test-coverage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vitest -c vitest.unit.config.ts --coverage&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test-bench&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vitest bench&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;release&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/release.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;changelog&quot;</span><span class="punctuation">:</span> <span class="string">&quot;conventional-changelog -p angular -i CHANGELOG.md -s&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev-esm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/dev.js -if esm-bundler-runtime&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev-compiler&quot;</span><span class="punctuation">:</span> <span class="string">&quot;run-p \&quot;dev template-explorer\&quot; serve&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev-sfc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;run-s dev-sfc-prepare dev-sfc-run&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev-sfc-prepare&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/pre-dev-sfc.js || npm run build-all-cjs&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev-sfc-serve&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vite packages/sfc-playground --host&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev-sfc-run&quot;</span><span class="punctuation">:</span> <span class="string">&quot;run-p \&quot;dev compiler-sfc -f esm-browser\&quot; \&quot;dev vue -if esm-bundler-runtime\&quot; \&quot;dev vue -ipf esm-browser-runtime\&quot; \&quot;dev server-renderer -if esm-bundler\&quot; dev-sfc-serve&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;serve&quot;</span><span class="punctuation">:</span> <span class="string">&quot;serve&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;open&quot;</span><span class="punctuation">:</span> <span class="string">&quot;open http://localhost:3000/packages/template-explorer/local.html&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build-sfc-playground&quot;</span><span class="punctuation">:</span> <span class="string">&quot;run-s build-all-cjs build-runtime-esm build-browser-esm build-ssr-esm build-sfc-playground-self&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build-all-cjs&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js vue runtime compiler reactivity shared -af cjs&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build-runtime-esm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js runtime reactivity shared -af esm-bundler &amp;&amp; node scripts/build.js vue -f esm-bundler-runtime &amp;&amp; node scripts/build.js vue -f esm-browser-runtime&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build-browser-esm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js runtime reactivity shared -af esm-bundler &amp;&amp; node scripts/build.js vue -f esm-bundler &amp;&amp; node scripts/build.js vue -f esm-browser&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build-ssr-esm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/build.js compiler-sfc server-renderer -f esm-browser&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;build-sfc-playground-self&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd packages/sfc-playground &amp;&amp; npm run build&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;preinstall&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npx only-allow pnpm&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;postinstall&quot;</span><span class="punctuation">:</span> <span class="string">&quot;simple-git-hooks&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;simple-git-hooks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;pre-commit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pnpm lint-staged &amp;&amp; pnpm check&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;commit-msg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;node scripts/verify-commit.js&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;lint-staged&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;*.&#123;js,json&#125;&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;prettier --write&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;*.ts?(x)&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;eslint --fix&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;prettier --parser=typescript --write&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;engines&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;node&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&gt;=18.12.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="attr">&quot;pnpm&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;peerDependencyRules&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;allowedVersions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;typescript-eslint&gt;eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^9.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;@typescript-eslint/eslint-plugin&gt;eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^9.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;@typescript-eslint/parser&gt;eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^9.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;@typescript-eslint/type-utils&gt;eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^9.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;@typescript-eslint/utils&gt;eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^9.0.0&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.xiongmeiqiang.cn/2024/06/24/vuejs-package/" data-id="clcffyws50003zkfyf7eocpf6" data-title="vuejs_package" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-test" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/19/test/" class="article-date">
+  <time class="dt-published" datetime="2024-06-19T05:36:05.730Z" itemprop="datePublished">2024-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Rain Effect</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+    <script src="map.js"></script>
+</body>
+</html>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.xiongmeiqiang.cn/2024/06/19/test/" data-id="clcffyws40002zkfyciil2exn" data-title="" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-create-vue" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/19/create-vue/" class="article-date">
+  <time class="dt-published" datetime="2024-06-19T03:59:56.000Z" itemprop="datePublished">2024-06-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/06/19/create-vue/">create vue</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>响应系统：<br>DepsMananger: callbackFn<br>Data：Proxy</p>
+<p>Compiler（模板-&gt;h()）<br>    render -&gt; vdom</p>
+<p>renderer<br>    vdom, element</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.xiongmeiqiang.cn/2024/06/19/create-vue/" data-id="clcffywrw0000zkfy6z14hc4l" data-title="create vue" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-web-ide" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/06/18/web-ide/" class="article-date">
@@ -93,8 +480,29 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p><a target="_blank" rel="noopener" href="https://github.com/microsoft/monaco-editor">https://github.com/microsoft/monaco-editor</a></p>
-<p>LSP</p>
+        <h2 id="monaco-editor"><a href="#monaco-editor" class="headerlink" title="monaco-editor"></a><a target="_blank" rel="noopener" href="https://github.com/microsoft/monaco-editor">monaco-editor</a></h2><h2 id="vscode"><a href="#vscode" class="headerlink" title="vscode"></a>vscode</h2><p><img src="/image-1.png" alt="alt text"></p>
+<h2 id="语法高亮"><a href="#语法高亮" class="headerlink" title="语法高亮"></a>语法高亮</h2><p><a target="_blank" rel="noopener" href="https://github.com/microsoft/monaco-editor">https://github.com/microsoft/monaco-editor</a></p>
+<h2 id="LSP（语言服务器协议）"><a href="#LSP（语言服务器协议）" class="headerlink" title="LSP（语言服务器协议）"></a>LSP（语言服务器协议）</h2><ul>
+<li>编程语言的域模型</li>
+<li>原理<ul>
+<li><p>语言服务器在其自己的进程中运行</p>
+</li>
+<li><p>标准化文本文档 URI 或 游标位置比直接的ast分析更简单</p>
+</li>
+<li><p>通信编辑器与语言服务器通信（JSON-RPC）<br><img src="/image.png" alt="alt text"></p>
+</li>
+<li><p>textDocument.publishDiagnostics </p>
+</li>
+<li><p>textDocument.definition<br>request:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span> <span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;textDocument/definition&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;textDocument&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///p%3A/mseng/VSCode/Playgrounds/cpp/use.cpp&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;position&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;line&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;character&quot;</span><span class="punctuation">:</span> <span class="number">12</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>response:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;uri&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:///p%3A/mseng/VSCode/Playgrounds/cpp/provide.cpp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;range&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;line&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;character&quot;</span><span class="punctuation">:</span> <span class="number">4</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;end&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;line&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;character&quot;</span><span class="punctuation">:</span> <span class="number">11</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://medium.com/@flash12561256/rust-analyzer-%E7%9A%84-ide-%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0-series-1-lsp-6f06664eb6b2">功能实现</a></p>
+</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -340,10 +748,24 @@
 <li>及时、公开表扬</li>
 </ul>
 <ol start="8">
-<li><p>您在团队中是如何处理冲突和确保团队目标一致性的？</p>
+<li>您在团队中是如何处理冲突和确保团队目标一致性的？</li>
+</ol>
+<p>处理冲突：</p>
+<ul>
+<li><p>原则是互相理解、不偏袒、以事实为依据。</p>
 </li>
-<li><p>您如何评估和提升团队成员的技术能力？</p>
+<li><p>动作是：</p>
+<ol>
+<li>先降低对抗情绪</li>
+<li>互相陈述事实、观点</li>
+<li>努力达成事实统一，观点统一</li>
+<li>即使不统一，也要以大局利益为重来妥协</li>
+<li>事后关系的弥补</li>
+</ol>
 </li>
+</ul>
+<ol start="9">
+<li>您如何评估和提升团队成员的技术能力？</li>
 </ol>
 <hr>
 <ol start="10">
@@ -487,15 +909,23 @@
       <ul>
         
           <li>
-            <a href="/2024/06/18/web-ide/">web ide</a>
+            <a href="/2024/06/27/%E6%9E%B6%E6%9E%84%E5%B8%88/">架构师</a>
           </li>
         
           <li>
-            <a href="/2024/06/12/ineterview/">如何利用AI进行面试复习</a>
+            <a href="/2024/06/26/map/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2024/03/22/hello-world/">Hello World1ewe</a>
+            <a href="/2024/06/24/vuejs-package/">vuejs_package</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/19/test/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/19/create-vue/">create vue</a>
           </li>
         
       </ul>
@@ -511,7 +941,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2024 John&#39;s home<br>
+      &copy; 2023 John&#39;s home<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

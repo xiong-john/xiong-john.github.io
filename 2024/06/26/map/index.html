@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>John&#39;s home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="&#x2F;&#x2F; 声明全局变量 let scene, camera, renderer, particles, particleSystem;  let keyboard &#x3D; {}; &#x2F;&#x2F; 用于存储键盘按键状态 &#x2F;&#x2F; 初始化函数 function init() {   &#x2F;&#x2F; 创建场景   scene &#x3D; new THREE.Scene();    &#x2F;&#x2F; 创建相机   camera &#x3D; new THREE.Pe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="John&#39;s home">
+<meta property="og:url" content="https://www.xiongmeiqiang.cn/2024/06/26/map/index.html">
+<meta property="og:site_name" content="John&#39;s home">
+<meta property="og:description" content="&#x2F;&#x2F; 声明全局变量 let scene, camera, renderer, particles, particleSystem;  let keyboard &#x3D; {}; &#x2F;&#x2F; 用于存储键盘按键状态 &#x2F;&#x2F; 初始化函数 function init() {   &#x2F;&#x2F; 创建场景   scene &#x3D; new THREE.Scene();    &#x2F;&#x2F; 创建相机   camera &#x3D; new THREE.Pe">
+<meta property="og:locale">
+<meta property="article:published_time" content="2024-06-26T07:01:33.758Z">
+<meta property="article:modified_time" content="2024-06-28T04:52:18.559Z">
+<meta property="article:author" content="John&#39;s home">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="John's home" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">John&#39;s home</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.xiongmeiqiang.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-map" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/26/map/" class="article-date">
+  <time class="dt-published" datetime="2024-06-26T07:01:33.758Z" itemprop="datePublished">2024-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        // 声明全局变量
+let scene, camera, renderer, particles, particleSystem;
+
+let keyboard = {}; // 用于存储键盘按键状态
+// 初始化函数
+function init() {
+  // 创建场景
+  scene = new THREE.Scene();
+
+  // 创建相机
+  camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    1,
+    1000
+  );
+  camera.position.set(0, 0, 100);
+
+  // 创建渲染器
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  const height = window.innerHeight
+  const width = window.innerWidth;
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  let _l = new THREE.TextureLoader().load("textures/holand/_l.jpg");
+  let _b = new THREE.TextureLoader().load("textures/holand/_b.jpg");
+  let _d = new THREE.TextureLoader().load("textures/holand/_d.jpg");
+  let _f = new THREE.TextureLoader().load("textures/holand/_f.jpg");
+  let _r = new THREE.TextureLoader().load("textures/holand/_r.jpg");
+  let _u = new THREE.TextureLoader().load("textures/holand/_u.jpg");
+  let skyBoxGeometry = new THREE.BoxGeometry(height, width, 1000);
+  let skyBoxMaterial = [
+    new THREE.MeshBasicMaterial({ map: _l, side: THREE.BackSide }), // 反面贴图
+    new THREE.MeshBasicMaterial({ map: _r, side: THREE.BackSide }), // 正面贴图
+    new THREE.MeshBasicMaterial({ map: _f, side: THREE.BackSide }), // 上面贴图
+    new THREE.MeshBasicMaterial({ map: _u, side: THREE.BackSide }), // 下面贴图
+    new THREE.MeshBasicMaterial({ map: _f, side: THREE.BackSide }), // 左面贴图
+    new THREE.MeshBasicMaterial({ map: _b, side: THREE.BackSide }), // 右面贴图
+  ];
+  let skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+  scene.add(skyBox);
+
+  // 添加云
+  let cloudTexture = new THREE.TextureLoader().load("textures/cloud.png");
+  let cloudMaterial = new THREE.MeshBasicMaterial({
+    map: cloudTexture,
+    transparent: true,
+  });
+  let cloudGeometry1 = new THREE.PlaneGeometry(50, 20);
+  let cloudGeometry2 = new THREE.PlaneGeometry(70, 30);
+  let cloud1 = new THREE.Mesh(cloudGeometry1, cloudMaterial);
+  let cloud2 = new THREE.Mesh(cloudGeometry2, cloudMaterial);
+  cloud1.position.set(15, 0, 3);
+  cloud2.position.set(0, 10, 2);
+  cloud1.name = "cloud1";
+  cloud2.name = "cloud2";
+  scene.add(cloud1);
+  scene.add(cloud2);
+
+  // 添加太阳
+  let SunTexture = new THREE.TextureLoader().load("textures/sun.png");
+  let sunGeometry = new THREE.PlaneGeometry(30, 30);
+  let sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+  let SunMaterial = new THREE.MeshBasicMaterial({
+    map: SunTexture,
+    transparent: true,
+  });
+  let sun = new THREE.Mesh(sunGeometry, SunMaterial);
+
+  // scene.getObjectByName('cloud1').rotation.z += 0.002;
+  // scene.getObjectByName('cloud2').rotation.z += 0.002;
+
+  sun.position.set(0, 20, 0);
+  sun.name = "sun";
+  scene.add(sun);
+
+  //  // 添加蓝天背景（天空盒）
+  //  let skyTexture = new THREE.TextureLoader().load('textures/sky.jpg');
+  //  let skyBoxGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
+  //  let skyBoxMaterial = [
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 反面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 正面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 上面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 下面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide }), // 左面贴图
+  //      new THREE.MeshBasicMaterial({ map: skyTexture, side: THREE.BackSide })  // 右面贴图
+  //  ];
+  //  let skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+  //  scene.add(skyBox);
+
+  // 创建粒子材质··
+  let particleCount = 10000;
+  particles = new THREE.Geometry();
+  let particleTexture = new THREE.TextureLoader().load("textures/raindrop.png");
+  let particleMaterial = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 1,
+    map: particleTexture,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+  });
+
+  // 创建粒子系统
+  for (let i = 0; i < particleCount; i++) {
+    let x = Math.random() * 1000 - 100;
+    let y = Math.random() * 1000 - 100;
+    let z = Math.random() * 1000 - 100;
+    let particle = new THREE.Vector3(x, y, z);
+    particle.velocityY = -Math.random() * 2 - 1; // 下落速度随机
+    particles.vertices.push(particle);
+  }
+
+  // 创建粒子系统对象
+  particleSystem = new THREE.Points(particles, particleMaterial);
+  scene.add(particleSystem);
+
+  // 添加光源
+  let ambientLight = new THREE.AmbientLight(0x404040); // 环境光
+  scene.add(ambientLight);
+
+  // 监听窗口大小变化
+  window.addEventListener("resize", onWindowResize, false);
+
+  // 监听窗口大小变化
+  window.addEventListener("resize", onWindowResize, false);
+
+  // 监听键盘事件
+  document.addEventListener("keydown", onKeyDown, false);
+  document.addEventListener("keyup", onKeyUp, false);
+
+  // 开始渲染
+  animate();
+}
+
+// 键盘按下事件处理函数
+function onKeyDown(event) {
+  keyboard[event.code] = true;
+}
+
+// 键盘释放事件处理函数
+function onKeyUp(event) {
+  keyboard[event.code] = false;
+}
+
+// 窗口大小变化处理函数
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// 动画循环
+function animate() {
+  requestAnimationFrame(animate);
+
+  // 更新粒子位置
+  particles.vertices.forEach((particle) => {
+    if (particle.y < -100) {
+      particle.y = 100;
+      particle.velocityY = -Math.random() * 2 - 1;
+    }
+    particle.y += particle.velocityY;
+  });
+
+  // 更新粒子系统
+  particleSystem.geometry.verticesNeedUpdate = true;
+
+  // 旋转太阳和云以增加动感
+  scene.getObjectByName("sun").rotation.z += 0.005;
+  scene.getObjectByName("cloud1").position.x += 0.01;
+  scene.getObjectByName("cloud2").position.x += 0.02;
+
+  // 根据按键状态移动相机
+  if (keyboard["KeyW"]) {
+    camera.position.z -= 0.1;
+  }
+  if (keyboard["KeyS"]) {
+    camera.position.z += 0.1;
+  }
+  if (keyboard["KeyA"]) {
+    camera.position.x -= 0.1;
+  }
+  if (keyboard["KeyD"]) {
+    camera.position.x += 0.1;
+  }
+  if (keyboard["KeyQ"]) {
+    camera.rotation.y += 0.1;
+  }
+
+  // 渲染场景
+  renderer.render(scene, camera);
+}
+
+// 初始化
+init();
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.xiongmeiqiang.cn/2024/06/26/map/" data-id="clcffyws30001zkfygqoe5b5v" data-title="" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/06/27/%E6%9E%B6%E6%9E%84%E5%B8%88/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          架构师
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/06/24/vuejs-package/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">vuejs_package</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/06/27/%E6%9E%B6%E6%9E%84%E5%B8%88/">架构师</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/26/map/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/24/vuejs-package/">vuejs_package</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/19/test/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/19/create-vue/">create vue</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John&#39;s home<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
